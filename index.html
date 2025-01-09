@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xem Ảnh</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        img {
+            max-width: 100%;
+            max-height: 70vh;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .controls button, .controls input {
+            padding: 5px 10px;
+            font-size: 16px;
+        }
+
+        .page-info {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Xem Ảnh</h1>
+    <img id="imageViewer" src="anh1.jpg" alt="Ảnh">
+    <div class="controls">
+        <button onclick="goToFirst()">Đầu</button>
+        <button onclick="goToPrev()">Trước</button>
+        <input type="number" id="pageInput" min="1" max="10" value="1" onchange="goToPage()">
+        <button onclick="goToNext()">Tiếp</button>
+        <button onclick="goToLast()">Cuối</button>
+    </div>
+    <div class="page-info">
+        Trang: <span id="currentPage">1</span> / <span id="totalPages">10</span>
+    </div>
+
+    <script>
+        // Danh sách ảnh
+        const images = Array.from({ length: 10 }, (_, i) => `anh${i + 1}.jpg`);
+
+        let currentPage = 1;
+
+        function updateImage() {
+            const imageViewer = document.getElementById("imageViewer");
+            const currentPageSpan = document.getElementById("currentPage");
+            const pageInput = document.getElementById("pageInput");
+
+            imageViewer.src = images[currentPage - 1];
+            currentPageSpan.textContent = currentPage;
+            pageInput.value = currentPage;
+        }
+
+        function goToFirst() {
+            currentPage = 1;
+            updateImage();
+        }
+
+        function goToLast() {
+            currentPage = images.length;
+            updateImage();
+        }
+
+        function goToNext() {
+            if (currentPage < images.length) {
+                currentPage++;
+                updateImage();
+            }
+        }
+
+        function goToPrev() {
+            if (currentPage > 1) {
+                currentPage--;
+                updateImage();
+            }
+        }
+
+        function goToPage() {
+            const pageInput = document.getElementById("pageInput");
+            const page = parseInt(pageInput.value);
+
+            if (page >= 1 && page <= images.length) {
+                currentPage = page;
+                updateImage();
+            } else {
+                alert("Số trang không hợp lệ!");
+            }
+        }
+
+        // Bắt sự kiện phím mũi tên
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "ArrowRight") {
+                // Phím mũi tên phải
+                goToNext();
+            } else if (event.key === "ArrowLeft") {
+                // Phím mũi tên trái
+                goToPrev();
+            }
+        });
+
+        // Cập nhật tổng số trang
+        document.getElementById("totalPages").textContent = images.length;
+    </script>
+</body>
+</html>
